@@ -1,5 +1,5 @@
 #
-# Copyright 2013-2023 the original author or authors.
+# Copyright 2013-2024 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,15 +20,15 @@
 version: 2
 updates:
 
-  - package-ecosystem: "maven"
-    directory: "/"
-    open-pull-requests-limit: 20
-    # Ignore major version updates
-    ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "03:00"
-      timezone: "US/Eastern"
+- package-ecosystem: "maven"
+  directory: "/"
+  open-pull-requests-limit: 20
+  # Ignore major version updates
+  ignore:
+  - dependency-name: "*"
+    update-types: ["version-update:semver-major"]
+  schedule:
+    interval: "weekly"
+    day: "monday"
+    time: "03:00"
+    timezone: "US/Eastern"

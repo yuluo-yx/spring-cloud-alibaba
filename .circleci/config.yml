@@ -1,5 +1,5 @@
 #
-# Copyright 2013-2023 the original author or authors.
+# Copyright 2013-2024 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,39 +18,39 @@ version: 2
 jobs:
   build:
     docker:
-      - image: springcloud/pipeline-base
-        user: appuser
+    - image: springcloud/pipeline-base
+      user: appuser
     environment:
       _JAVA_OPTIONS: "-Xms1024m -Xmx2048m"
       TERM: dumb
     branches:
       ignore:
-        - gh-pages # list of branches to ignore
+      - gh-pages # list of branches to ignore
     resource_class: medium
     steps:
-      - checkout
-      - restore_cache:
-          key: sc-alibaba-{{ .Branch }}
-      - run:
-          name: "Download dependencies"
-          command: ./mvnw -Pspring -U --fail-never dependency:go-offline || true
-      - save_cache:
-          key: sc-alibaba-{{ .Branch }}
-          paths:
-            - ~/.m2
-      - run:
-          name: "Running build"
-          command: ./mvnw clean install -U -nsu --batch-mode -Dmaven.test.redirectTestOutputToFile=true -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn -Dgpg.skip
-      - run:
-          name: "Aggregate test results"
-          when: always
-          command: |
-            mkdir -p ~/junit/
-            find . -type f -regex ".*/target/.*-reports/.*" -exec cp {} ~/junit/ \;
-            bash <(curl -s https://codecov.io/bash)
-      - store_artifacts:
-          path: ~/junit/
-          destination: artifacts
-      - store_test_results:
-          path: ~/junit/
-          destination: testartifacts
+    - checkout
+    - restore_cache:
+        key: sc-alibaba-{{ .Branch }}
+    - run:
+        name: "Download dependencies"
+        command: ./mvnw -Pspring -U --fail-never dependency:go-offline || true
+    - save_cache:
+        key: sc-alibaba-{{ .Branch }}
+        paths:
+        - ~/.m2
+    - run:
+        name: "Running build"
+        command: ./mvnw clean install -U -nsu --batch-mode -Dmaven.test.redirectTestOutputToFile=true -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn -Dgpg.skip
+    - run:
+        name: "Aggregate test results"
+        when: always
+        command: |
+          mkdir -p ~/junit/
+          find . -type f -regex ".*/target/.*-reports/.*" -exec cp {} ~/junit/ \;
+          bash <(curl -s https://codecov.io/bash)
+    - store_artifacts:
+        path: ~/junit/
+        destination: artifacts
+    - store_test_results:
+        path: ~/junit/
+        destination: testartifacts

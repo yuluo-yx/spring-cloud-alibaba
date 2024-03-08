@@ -1,5 +1,5 @@
 #
-# Copyright 2013-2023 the original author or authors.
+# Copyright 2013-2024 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,13 +25,13 @@ on:
   push:
     # branches: [master, 'release/**']
     paths:
-      - '**/*.md'
-      - '**/link-check.yml'
+    - '**/*.md'
+    - '**/link-check.yml'
   pull_request:
     branches: [2022.x, "release/**"]
     paths:
-      - '**/*.md'
-      - '**/link-check.yml'
+    - '**/*.md'
+    - '**/link-check.yml'
 
 permissions:
   contents: read
@@ -47,19 +47,19 @@ jobs:
   check-links:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    - name: Checkout
+      uses: actions/checkout@v4
 
-      - name: Get script
-        run: |
-          wget https://raw.githubusercontent.com/xuruidong/markdown-link-checker/main/link_checker.py
+    - name: Get script
+      run: |
+        wget https://raw.githubusercontent.com/xuruidong/markdown-link-checker/main/link_checker.py
 
-      - name: Setup python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
+    - name: Setup python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
 
-      - name: Link check (critical, all files)
-        run: |
-          # python link_checker.py ./ --enable-external --ignore "http://apisix.iresty.com" "https://www.upyun.com" "https://github.com/apache/apisix/actions/workflows/build.yml/badge.svg" "https://httpbin.org/" "https://en.wikipedia.org/wiki/Cache"
-          python link_checker.py ./
+    - name: Link check (critical, all files)
+      run: |
+        # python link_checker.py ./ --enable-external --ignore "http://apisix.iresty.com" "https://www.upyun.com" "https://github.com/apache/apisix/actions/workflows/build.yml/badge.svg" "https://httpbin.org/" "https://en.wikipedia.org/wiki/Cache"
+        python link_checker.py ./
