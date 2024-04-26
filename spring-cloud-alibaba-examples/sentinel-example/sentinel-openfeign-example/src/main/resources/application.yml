@@ -3,11 +3,13 @@ server:
 
 spring:
   application:
-    name: openfeign-example
+    name: sentinel-openfeign-example
+
   cloud:
     sentinel:
       transport:
-        dashboard: 127.0.0.1:8081
+        dashboard: localhost:8080
+      eager: true
 #  Don't support run in jar by using configuration file method now, refer to https://github.com/alibaba/spring-cloud-alibaba/issues/3033
 #      datasource:
 #        ds1.file:
