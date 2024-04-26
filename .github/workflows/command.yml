@@ -1,0 +1,28 @@
+name: Retest Action on PR Comment
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+
+jobs:
+  retest:
+    if: |
+      ${{
+         github.event.issue.pull_request
+         && github.repository == 'alibaba/spring-cloud-alibaba'
+      }}
+    name: Retest
+    runs-on: ubuntu-22.04
+    permissions:
+      pull-requests: write
+      actions: write
+    steps:
+      - uses: yuluo-yx/gh-retest@v1.0.0-RC1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          comment-id: ${{ github.event.comment.id }}
+          pr-url: ${{ github.event.issue.pull_request.url }}
+
