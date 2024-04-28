@@ -45,6 +45,7 @@ spring:
       # filter:
       #   enabled: false
       # http-method-specify: false
+      eager: true
 
 server:
   port: 18083

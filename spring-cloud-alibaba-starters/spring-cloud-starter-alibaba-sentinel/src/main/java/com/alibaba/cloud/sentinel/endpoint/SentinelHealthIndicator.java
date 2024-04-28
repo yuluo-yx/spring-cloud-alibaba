@@ -16,6 +16,8 @@
 
 package com.alibaba.cloud.sentinel.endpoint;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +28,10 @@ import com.alibaba.csp.sentinel.heartbeat.HeartbeatSenderProvider;
 import com.alibaba.csp.sentinel.transport.HeartbeatSender;
 import com.alibaba.csp.sentinel.transport.config.TransportConfig;
 import com.alibaba.csp.sentinel.transport.endpoint.Endpoint;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
@@ -56,11 +61,15 @@ import org.springframework.util.CollectionUtils;
  *
  * @author cdfive
  */
-public class SentinelHealthIndicator extends AbstractHealthIndicator {
+public class SentinelHealthIndicator extends AbstractHealthIndicator implements InitializingBean {
 
 	private DefaultListableBeanFactory beanFactory;
 
 	private SentinelProperties sentinelProperties;
+
+	private final static String SENTINEL_CONFIG_PKG = "com.alibaba.csp.sentinel.config";
+
+	private static final Logger logger = LoggerFactory.getLogger(SentinelHealthIndicator.class);
 
 	public SentinelHealthIndicator(DefaultListableBeanFactory beanFactory,
 			SentinelProperties sentinelProperties) {
@@ -85,11 +94,16 @@ public class SentinelHealthIndicator extends AbstractHealthIndicator {
 		// Check health of Dashboard
 		boolean dashboardUp = true;
 		List<Endpoint> consoleServerList = TransportConfig.getConsoleServerList();
+		logger.info("Find sentinel dashboard server list: {}", consoleServerList);
 		if (CollectionUtils.isEmpty(consoleServerList)) {
 			// If Dashboard isn't configured, it's OK and mark the status of Dashboard
 			// with UNKNOWN.
 			detailMap.put("dashboard",
-					new Status(Status.UNKNOWN.getCode(), "dashboard isn't configured"));
+					new Status(
+							Status.UNKNOWN.getCode(),
+							"dashboard isn't configured"
+					)
+			);
 		}
 		else {
 			// If Dashboard is configured, send a heartbeat message to it and check the
@@ -101,12 +115,18 @@ public class SentinelHealthIndicator extends AbstractHealthIndicator {
 				detailMap.put("dashboard", Status.UP);
 			}
 			else {
+				logger.warn("Sentinel dashboard heartbeat message can't be sent to the dashboard servers {} one of them can't be connected",
+						consoleServerList);
 				// If failed to send heartbeat message, means that the Dashboard is DOWN
 				dashboardUp = false;
-				detailMap.put("dashboard",
-						new Status(Status.UNKNOWN.getCode(), String.format(
+				detailMap.put("dashboard", new Status(
+						Status.UNKNOWN.getCode(),
+						String.format(
 								"the dashboard servers [%s] one of them can't be connected",
-								consoleServerList)));
+								consoleServerList
+						)
+					)
+				);
 			}
 		}
 
@@ -148,6 +168,22 @@ public class SentinelHealthIndicator extends AbstractHealthIndicator {
 		else {
 			builder.unknown().withDetails(detailMap);
 		}
+	}
+
+	@Override
+	public void afterPropertiesSet() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+
+		Class<?> sentinelConfigClass = Class.forName(SENTINEL_CONFIG_PKG + ".SentinelConfig");
+		Class<?> sentinelConfigLoaderClass = Class.forName(SENTINEL_CONFIG_PKG + ".SentinelConfigLoader");
+
+		Method loadMethod = sentinelConfigLoaderClass.getDeclaredMethod("load");
+		Method loaderPropsMethod = sentinelConfigClass.getDeclaredMethod("loadProps");
+
+		loaderPropsMethod.setAccessible(true);
+		loadMethod.setAccessible(true);
+
+		loadMethod.invoke(null);
+		loaderPropsMethod.invoke(null);
 	}
 
 }
