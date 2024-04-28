@@ -142,7 +142,7 @@ docker-compose-env.yml 文件运行成功之后，添加 Nacos 配置：
 - Nacos examples
   - [Nacos config example](../../../nacos-example/readme-zh.md)
   - [Nacos discovery example](../../../nacos-example/readme-zh.md)
-- [Sentinel core example](../../../sentinel-example/sentinel-core-example/readme-zh.md)
+- [Sentinel core example](../../../sentinel-example/README-zh.md)
 - [Seata example](../../../seata-example/readme-zh.md)
 - [RocketMQ example](../../../rocketmq-example/readme-zh.md)
 
