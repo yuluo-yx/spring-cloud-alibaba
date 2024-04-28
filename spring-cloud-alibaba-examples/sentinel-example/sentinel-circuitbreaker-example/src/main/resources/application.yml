@@ -3,7 +3,8 @@ server:
 
 spring:
   application:
-    name: circuit-breaker-app
+    name: sentinel-circuit-breaker-example
+
   cloud:
     nacos:
       config:

@@ -1,8 +1,10 @@
 server:
   port: 18085
+
 spring:
   application:
     name: sentinel-spring-cloud-gateway
+
   cloud:
     gateway:
       enabled: true
@@ -31,6 +33,7 @@ spring:
         ruleType: gw-api-group
       transport:
         dashboard: localhost:8080
+      eager: true
       filter:
         enabled: true
       scg.fallback:
@@ -40,4 +43,8 @@ spring:
       scg:
         order: -100
 
-management.endpoints.web.exposure.include: "*"
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

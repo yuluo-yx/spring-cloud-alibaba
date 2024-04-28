@@ -4,6 +4,13 @@ server:
 spring:
   application:
     name: sentinel-resttemplate-example
+
+  cloud:
+    sentinel:
+      transport:
+        dashboard: localhost:8080
+      eager: true
+
 #  Don't support run in jar by using configuration file method now, refer to https://github.com/alibaba/spring-cloud-alibaba/issues/3033
 #  cloud:
 #    sentinel:
@@ -16,4 +23,3 @@ spring:
 #          file: "classpath: flowrule.json"
 #          ruleType: "flow"
 #          dataType: "json"
-
