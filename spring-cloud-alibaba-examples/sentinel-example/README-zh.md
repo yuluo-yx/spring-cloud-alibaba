@@ -54,7 +54,6 @@
       }
       ```
 
-
     当然也可以通过原始的 `SphU.entry(xxx)` 方法进行埋点，可以参见 [Sentinel 文档](https://github.com/alibaba/Sentinel/wiki/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8#%E5%AE%9A%E4%B9%89%E8%B5%84%E6%BA%90)。
 
 3. 配置限流规则
@@ -116,25 +115,23 @@ Hello
 
 1. 访问 http://localhost:8080 页面，进行登陆，默认用户名和密码均为：`sentinel`。
 
-   可以在左侧看到 Sentinel-Example 应用已经注册到了控制台，单击 **流控规则** ，可以看到目前的流控规则为空。
+   可以在左侧看到 `sentinel-core-example` 应用已经注册到了控制台，单击 **流控规则** ，可以看到目前的流控规则为空。
 
    > **注意：如果您在控制台没有找到应用，请调用一下进行了 Sentinel 埋点的 URL 或方法，因为 Sentinel 使用了 lazy load 策略。详细的排查过程请参见 [Sentinel FAQ](https://github.com/alibaba/Sentinel/wiki/FAQ)。**
 
-<p align="center"><img src="https://cdn.nlark.com/lark/0/2018/png/54319/1532315951819-9ffd959e-0547-4f61-8f06-91374cfe7f21.png" width="700" heigh='400' ></p>
+<img src="./images/image-20240428171413303.png" alt="image-20240428171413303" style="zoom:50%;" />
 
 2. 配置 URL 限流规则：点击新增流控规则，资源名填写需要限流的 URL 相对路径，单机阈值选择需要限流的阈值，点击新增进行确认。(为了便于演示效果，这里将值设置成了 1)。
 
-<p align="center"><img src="https://cdn.yuque.com/lark/0/2018/png/54319/1532078717483-62ab74cd-e5da-4241-a45d-66166b1bde99.png" width="480" heigh='180' ></p>
+<img src="./images/image-20240428171245517.png" alt="image-20240428171245517" style="zoom: 50%;" />
 
 3. 配置自定义限流规则：点击新增流控规则，资源名填写 `@SentinelResource` 注解 `value` 字段的值，单机阈值选择需要限流的阈值，点击新增进行确认。(为了便于演示效果，这里将值设置成了 1)。
 
-<p align="center"><img src="https://cdn.yuque.com/lark/0/2018/png/54319/1532080384317-2943ce0a-daaf-495d-8afc-79a0248a119a.png" width="480" heigh='180' ></p>
+<img src="./images/image-20240428171608519.png" alt="image-20240428171608519" style="zoom:50%;" />
 
 4. 访问 URL，当 QPS 超过 1 时,可以看到限流效果如下。
 
-<p align="center"><img src="https://cdn.yuque.com/lark/0/2018/png/54319/1532080652178-be119c4a-2a08-4f67-be70-fe5ed9a248a3.png" width="480" heigh='180' ></p>
-
-<p align="center"><img src="https://cdn.yuque.com/lark/0/2018/png/54319/1532080661437-b84ee161-6c2d-4df2-bdb7-7cf0d5be92fb.png" width="480" heigh='180' ></p>
+   ![image-20240428171907705](./images/image-20240428171907705.png)
 
 #### 自定义限流处理逻辑
 

@@ -16,8 +16,6 @@
 
 package com.alibaba.cloud.sentinel.endpoint;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +29,6 @@ import com.alibaba.csp.sentinel.transport.endpoint.Endpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
@@ -61,13 +58,11 @@ import org.springframework.util.CollectionUtils;
  *
  * @author cdfive
  */
-public class SentinelHealthIndicator extends AbstractHealthIndicator implements InitializingBean {
+public class SentinelHealthIndicator extends AbstractHealthIndicator {
 
 	private DefaultListableBeanFactory beanFactory;
 
 	private SentinelProperties sentinelProperties;
-
-	private final static String SENTINEL_CONFIG_PKG = "com.alibaba.csp.sentinel.config";
 
 	private static final Logger logger = LoggerFactory.getLogger(SentinelHealthIndicator.class);
 
@@ -107,9 +102,8 @@ public class SentinelHealthIndicator extends AbstractHealthIndicator implements 
 		}
 		else {
 			// If Dashboard is configured, send a heartbeat message to it and check the
-			// result
-			HeartbeatSender heartbeatSender = HeartbeatSenderProvider
-					.getHeartbeatSender();
+			HeartbeatSender heartbeatSender = HeartbeatSenderProvider.getHeartbeatSender();
+			// result is true if the heartbeat message is sent successfully
 			boolean result = heartbeatSender.sendHeartbeat();
 			if (result) {
 				detailMap.put("dashboard", Status.UP);
@@ -168,22 +162,6 @@ public class SentinelHealthIndicator extends AbstractHealthIndicator implements 
 		else {
 			builder.unknown().withDetails(detailMap);
 		}
-	}
-
-	@Override
-	public void afterPropertiesSet() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-
-		Class<?> sentinelConfigClass = Class.forName(SENTINEL_CONFIG_PKG + ".SentinelConfig");
-		Class<?> sentinelConfigLoaderClass = Class.forName(SENTINEL_CONFIG_PKG + ".SentinelConfigLoader");
-
-		Method loadMethod = sentinelConfigLoaderClass.getDeclaredMethod("load");
-		Method loaderPropsMethod = sentinelConfigClass.getDeclaredMethod("loadProps");
-
-		loaderPropsMethod.setAccessible(true);
-		loadMethod.setAccessible(true);
-
-		loadMethod.invoke(null);
-		loaderPropsMethod.invoke(null);
 	}
 
 }
