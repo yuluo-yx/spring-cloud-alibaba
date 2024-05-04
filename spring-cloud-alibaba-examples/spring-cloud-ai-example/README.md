@@ -18,7 +18,7 @@ Spring Cloud Alibaba AI 模块基于 [Spring AI 0.8.1](https://docs.spring.io/sp
    <dependency>
        <groupId>com.alibaba.cloud</groupId>
        <artifactId>spring-cloud-starter-alibaba-ai</artifactId>
-   </dependency>
+   </dependency>                            
    ```
 
 2. 在 application.yml 配置文件中加入以下配置：
