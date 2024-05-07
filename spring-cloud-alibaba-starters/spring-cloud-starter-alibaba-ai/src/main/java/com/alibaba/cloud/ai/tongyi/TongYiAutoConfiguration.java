@@ -22,6 +22,8 @@ import com.alibaba.cloud.ai.tongyi.audio.TongYiAudioSpeechClient;
 import com.alibaba.cloud.ai.tongyi.audio.TongYiAudioSpeechProperties;
 import com.alibaba.cloud.ai.tongyi.chat.TongYiChatClient;
 import com.alibaba.cloud.ai.tongyi.chat.TongYiChatProperties;
+import com.alibaba.cloud.ai.tongyi.embedding.TongYiTextEmbeddingClient;
+import com.alibaba.cloud.ai.tongyi.embedding.TongYiTextEmbeddingProperties;
 import com.alibaba.cloud.ai.tongyi.exception.TongYiException;
 import com.alibaba.cloud.ai.tongyi.image.TongYiImagesClient;
 import com.alibaba.cloud.ai.tongyi.image.TongYiImagesProperties;
@@ -29,6 +31,7 @@ import com.alibaba.dashscope.aigc.generation.Generation;
 import com.alibaba.dashscope.aigc.imagesynthesis.ImageSynthesis;
 import com.alibaba.dashscope.audio.tts.SpeechSynthesizer;
 import com.alibaba.dashscope.common.MessageManager;
+import com.alibaba.dashscope.embeddings.TextEmbedding;
 import com.alibaba.dashscope.exception.NoApiKeyException;
 import com.alibaba.dashscope.utils.ApiKey;
 import com.alibaba.dashscope.utils.Constants;
@@ -59,7 +62,8 @@ import org.springframework.context.annotation.Bean;
 		TongYiChatProperties.class,
 		TongYiImagesProperties.class,
 		TongYiAudioSpeechProperties.class,
-		TongYiConnectionProperties.class
+		TongYiConnectionProperties.class,
+		TongYiTextEmbeddingProperties.class
 })
 public class TongYiAutoConfiguration {
 
@@ -89,6 +93,13 @@ public class TongYiAutoConfiguration {
 	public SpeechSynthesizer speechSynthesizer() {
 
 		return new SpeechSynthesizer();
+	}
+
+	@Bean
+	@ConditionalOnMissingBean
+	public TextEmbedding textEmbedding() {
+
+		return new TextEmbedding();
 	}
 
 	@Bean
@@ -151,6 +162,24 @@ public class TongYiAutoConfiguration {
 		settingApiKey(connectionProperties);
 
 		return new TongYiAudioSpeechClient(speechSynthesizer, speechProperties.getOptions());
+	}
+
+	@Bean
+	@ConditionalOnProperty(
+			prefix = TongYiAudioSpeechProperties.CONFIG_PREFIX,
+			name = "enabled",
+			havingValue = "true",
+			matchIfMissing = true
+	)
+	public TongYiTextEmbeddingClient tongYiTextEmbeddingClient(
+			TextEmbedding textEmbedding,
+			TongYiTextEmbeddingProperties textEmbeddingProperties,
+			TongYiConnectionProperties connectionProperties
+	) {
+
+		settingApiKey(connectionProperties);
+
+		return new TongYiTextEmbeddingClient(textEmbedding);
 	}
 
 	/**
