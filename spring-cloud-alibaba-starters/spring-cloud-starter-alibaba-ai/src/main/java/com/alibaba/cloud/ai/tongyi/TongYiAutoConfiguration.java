@@ -24,6 +24,8 @@ import com.alibaba.cloud.ai.tongyi.audio.transcription.TongYiAudioTranscriptionM
 import com.alibaba.cloud.ai.tongyi.audio.transcription.TongYiAudioTranscriptionProperties;
 import com.alibaba.cloud.ai.tongyi.chat.TongYiChatModel;
 import com.alibaba.cloud.ai.tongyi.chat.TongYiChatProperties;
+import com.alibaba.cloud.ai.tongyi.chat.support.MessageContextHolder;
+import com.alibaba.cloud.ai.tongyi.chat.support.defaults.InMemoryMessageContextHolder;
 import com.alibaba.cloud.ai.tongyi.common.constants.TongYiConstants;
 import com.alibaba.cloud.ai.tongyi.common.exception.TongYiException;
 import com.alibaba.cloud.ai.tongyi.embedding.TongYiTextEmbeddingModel;
@@ -34,7 +36,6 @@ import com.alibaba.dashscope.aigc.generation.Generation;
 import com.alibaba.dashscope.aigc.imagesynthesis.ImageSynthesis;
 import com.alibaba.dashscope.audio.asr.transcription.Transcription;
 import com.alibaba.dashscope.audio.tts.SpeechSynthesizer;
-import com.alibaba.dashscope.common.MessageManager;
 import com.alibaba.dashscope.embeddings.TextEmbedding;
 import com.alibaba.dashscope.exception.NoApiKeyException;
 import com.alibaba.dashscope.utils.ApiKey;
@@ -58,9 +59,9 @@ import org.springframework.context.annotation.Scope;
 
 @AutoConfiguration
 @ConditionalOnClass({
-		MessageManager.class,
 		TongYiChatModel.class,
 		TongYiImagesModel.class,
+		MessageContextHolder.class,
 		TongYiAudioSpeechModel.class,
 		TongYiTextEmbeddingModel.class,
 		TongYiAudioTranscriptionModel.class
@@ -86,9 +87,9 @@ public class TongYiAutoConfiguration {
 	@Bean
 	@Scope("prototype")
 	@ConditionalOnMissingBean
-	public MessageManager msgManager() {
+	public MessageContextHolder msgManager() {
 
-		return new MessageManager(10);
+		return new InMemoryMessageContextHolder();
 	}
 
 	@Bean

@@ -15,18 +15,19 @@
  */
 
 package com.alibaba.cloud.ai.tongyi.chat;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-
+import com.alibaba.cloud.ai.tongyi.chat.support.MessageContextHolder;
+import com.alibaba.cloud.ai.tongyi.chat.support.defaults.InMemoryMessageContextHolder;
 import com.alibaba.cloud.ai.tongyi.common.exception.TongYiException;
 import com.alibaba.dashscope.aigc.conversation.ConversationParam;
 import com.alibaba.dashscope.aigc.generation.Generation;
 import com.alibaba.dashscope.aigc.generation.GenerationOutput;
 import com.alibaba.dashscope.aigc.generation.GenerationResult;
-import com.alibaba.dashscope.common.MessageManager;
 import com.alibaba.dashscope.common.Role;
 import com.alibaba.dashscope.exception.InputRequiredException;
 import com.alibaba.dashscope.exception.NoApiKeyException;
@@ -51,7 +52,6 @@ import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.model.ModelOptionsUtils;
 import org.springframework.ai.model.function.AbstractFunctionCallSupport;
 import org.springframework.ai.model.function.FunctionCallbackContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
 
@@ -87,9 +87,12 @@ public class TongYiChatModel extends
 
 	/**
 	 * User role message manager.
+	 * We will remove this field in the future. Use {@link InMemoryMessageContextHolder} instead.
+	 * Like the Dashscope SDK, which leaves context management up to the user,
+	 * you can impl the interface {@link MessageContextHolder} and use your own components to context manage the
 	 */
-	@Autowired
-	private MessageManager msgManager;
+	@Deprecated
+	private MessageContextHolder msgContextHolder;
 
 	/**
 	 * Initializes an instance of the TongYiChatClient.
@@ -149,14 +152,10 @@ public class TongYiChatModel extends
 		com.alibaba.dashscope.common.Message message = new com.alibaba.dashscope.common.Message();
 		message.setRole(Role.USER.getValue());
 		message.setContent(prompt.getContents());
-		msgManager.add(message);
-		params.setMessages(msgManager.get());
 
 		logger.trace("TongYi ConversationOptions: {}", params);
 		GenerationResult chatCompletions = this.callWithFunctionSupport(params);
 		logger.trace("TongYi ConversationOptions: {}", params);
-
-		msgManager.add(chatCompletions);
 
 		List<org.springframework.ai.chat.model.Generation> generations =
 				chatCompletions
