@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.alibaba.cloud.ai.tongyi.chat.support.MessageContextHolder;
+import com.alibaba.dashscope.common.Message;
 
-import org.springframework.ai.chat.messages.Message;
 
 /**
  * @author yuluo

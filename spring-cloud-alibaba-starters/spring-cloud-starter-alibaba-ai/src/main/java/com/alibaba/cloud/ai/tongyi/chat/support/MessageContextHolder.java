@@ -18,7 +18,8 @@ package com.alibaba.cloud.ai.tongyi.chat.support;
 
 import java.util.List;
 
-import org.springframework.ai.chat.messages.Message;
+import com.alibaba.dashscope.common.Message;
+
 
 /**
  * @author yuluo
@@ -26,15 +27,21 @@ import org.springframework.ai.chat.messages.Message;
  * Abstracts the storage of messages in a chat session. Use session id as the key to store messages.
  * You can customize the message context store by implementing this interface.
  * @see com.alibaba.cloud.ai.tongyi.chat.support.defaults.InMemoryMessageContextHolder
- * @since 2023.0.1.0
  */
 
 public interface MessageContextHolder {
+
+	String SCA_CHAT_SESSION_ID = "SCA_CHAT_SESSION";
 
 	void addMessage(String sessionId, Message message);
 
 	void removeMessage(String sessionId);
 
 	List<Message> getMessages(String sessionId);
+
+	default String getChatSessionId() {
+
+		return SCA_CHAT_SESSION_ID;
+	}
 
 }
