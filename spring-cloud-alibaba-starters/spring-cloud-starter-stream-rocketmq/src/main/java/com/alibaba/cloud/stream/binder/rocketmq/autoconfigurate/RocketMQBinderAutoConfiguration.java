@@ -22,13 +22,13 @@ import com.alibaba.cloud.stream.binder.rocketmq.properties.RocketMQBinderConfigu
 import com.alibaba.cloud.stream.binder.rocketmq.properties.RocketMQExtendedBindingProperties;
 import com.alibaba.cloud.stream.binder.rocketmq.provisioning.RocketMQTopicProvisioner;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.health.ConditionalOnEnabledHealthIndicator;
 import org.springframework.boot.actuate.health.HealthIndicator;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * issue:https://github.com/alibaba/spring-cloud-alibaba/issues/1681 .
@@ -37,36 +37,46 @@ import org.springframework.context.annotation.Configuration;
  * @author <a href="mailto:fangjian0423@gmail.com">Jim</a>
  * @author freeman
  */
-@Configuration(proxyBeanMethods = false)
-@EnableConfigurationProperties({ RocketMQExtendedBindingProperties.class,
-		RocketMQBinderConfigurationProperties.class })
+
+@AutoConfiguration
+@EnableConfigurationProperties({
+		RocketMQExtendedBindingProperties.class,
+		RocketMQBinderConfigurationProperties.class
+})
 public class RocketMQBinderAutoConfiguration {
-
-	@Autowired
-	private RocketMQExtendedBindingProperties extendedBindingProperties;
-
-	@Autowired
-	private RocketMQBinderConfigurationProperties rocketBinderConfigurationProperties;
 
 	@Bean
 	public RocketMQTopicProvisioner rocketMQTopicProvisioner() {
+
 		return new RocketMQTopicProvisioner();
 	}
 
 	@Bean
 	public RocketMQMessageChannelBinder rocketMQMessageChannelBinder(
-			RocketMQTopicProvisioner provisioningProvider) {
-		return new RocketMQMessageChannelBinder(rocketBinderConfigurationProperties,
-				extendedBindingProperties, provisioningProvider);
+			RocketMQTopicProvisioner provisioningProvider,
+			RocketMQExtendedBindingProperties extendedBindingProperties,
+			RocketMQBinderConfigurationProperties rocketBinderConfigurationProperties
+	) {
+
+		return new RocketMQMessageChannelBinder(
+				rocketBinderConfigurationProperties,
+				extendedBindingProperties, provisioningProvider
+		);
 	}
 
-	@Configuration(proxyBeanMethods = false)
 	@ConditionalOnClass(HealthIndicator.class)
 	@ConditionalOnEnabledHealthIndicator("rocketmq")
+	@ConditionalOnProperty(
+			prefix = RocketMQExtendedBindingProperties.PREFIX,
+			name = "enabled",
+			havingValue = "true",
+			matchIfMissing = true
+	)
 	static class RocketMQBinderHealthIndicatorConfiguration {
 
 		@Bean
 		public RocketMQBinderHealthIndicator rocketMQBinderHealthIndicator() {
+
 			return new RocketMQBinderHealthIndicator();
 		}
 

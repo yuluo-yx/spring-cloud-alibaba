@@ -26,11 +26,35 @@ import org.springframework.cloud.stream.binder.BinderSpecificPropertiesProvider;
  *
  * @author <a href="mailto:fangjian0423@gmail.com">Jim</a>
  */
-@ConfigurationProperties("spring.cloud.stream.rocketmq")
+@ConfigurationProperties(RocketMQExtendedBindingProperties.PREFIX)
 public class RocketMQExtendedBindingProperties extends
 		AbstractExtendedBindingProperties<RocketMQConsumerProperties, RocketMQProducerProperties, RocketMQSpecificPropertiesProvider> {
 
-	private static final String DEFAULTS_PREFIX = "spring.cloud.stream.rocketmq.default";
+	/**
+	 * Public constant for the RocketMQ binder name.
+	 */
+	public static final String PREFIX = "spring.cloud.stream.rocketmq";
+
+	/**
+	 * Default prefix for rocketmq binder properties.
+	 */
+	private static final String DEFAULTS_PREFIX = PREFIX + ".default";
+
+	/**
+	 * Rocketmq bean autoconfiguration flags.
+	 */
+	private boolean enabled = true;
+
+	public boolean isEnabled() {
+
+		return this.enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+
+		this.enabled = enabled;
+		System.out.println("shuchudfsdgagf " + enabled);
+	}
 
 	@Override
 	public String getDefaultsPrefix() {

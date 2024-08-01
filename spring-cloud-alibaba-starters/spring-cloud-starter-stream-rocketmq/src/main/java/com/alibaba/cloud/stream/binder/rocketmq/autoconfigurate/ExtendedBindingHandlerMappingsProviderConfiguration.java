@@ -21,8 +21,10 @@ import java.util.Map;
 
 import com.alibaba.cloud.stream.binder.rocketmq.convert.RocketMQMessageConverter;
 import com.alibaba.cloud.stream.binder.rocketmq.custom.RocketMQConfigBeanPostProcessor;
+import com.alibaba.cloud.stream.binder.rocketmq.properties.RocketMQExtendedBindingProperties;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
 import org.springframework.cloud.stream.config.BindingHandlerAdvise.MappingsProvider;
 import org.springframework.context.annotation.Bean;
@@ -31,10 +33,17 @@ import org.springframework.messaging.converter.CompositeMessageConverter;
 import org.springframework.messaging.converter.MessageConverter;
 
 @Configuration
+@ConditionalOnProperty(
+		prefix = RocketMQExtendedBindingProperties.PREFIX,
+		name = "enabled",
+		havingValue = "true",
+		matchIfMissing = true
+)
 public class ExtendedBindingHandlerMappingsProviderConfiguration {
 
 	@Bean
 	public MappingsProvider rocketExtendedPropertiesDefaultMappingsProvider() {
+
 		return () -> {
 			Map<ConfigurationPropertyName, ConfigurationPropertyName> mappings = new HashMap<>();
 			mappings.put(
@@ -44,12 +53,14 @@ public class ExtendedBindingHandlerMappingsProviderConfiguration {
 					ConfigurationPropertyName.of("spring.cloud.stream.rocketmq.streams"),
 					ConfigurationPropertyName
 							.of("spring.cloud.stream.rocketmq.streams.default"));
+
 			return mappings;
 		};
 	}
 
 	@Bean
 	public static RocketMQConfigBeanPostProcessor rocketMQConfigBeanPostProcessor() {
+
 		return new RocketMQConfigBeanPostProcessor();
 	}
 
@@ -60,6 +71,7 @@ public class ExtendedBindingHandlerMappingsProviderConfiguration {
 	@Bean(RocketMQMessageConverter.DEFAULT_NAME)
 	@ConditionalOnMissingBean(name = { RocketMQMessageConverter.DEFAULT_NAME })
 	public CompositeMessageConverter rocketMQMessageConverter() {
+
 		return new RocketMQMessageConverter().getMessageConverter();
 	}
 
@@ -70,6 +82,7 @@ public class ExtendedBindingHandlerMappingsProviderConfiguration {
 	 */
 	@Bean
 	public MessageConverter rocketMQCustomMessageConverter() {
+
 		return new RocketMQMessageConverter();
 	}
 
