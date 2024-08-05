@@ -26,5 +26,4 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "spring.cloud.stream.rocketmq.binder")
 public class RocketMQBinderConfigurationProperties extends RocketMQCommonProperties {
 
-	public static final String PREFIX = "spring.cloud.stream.rocketmq.binder";
 }
