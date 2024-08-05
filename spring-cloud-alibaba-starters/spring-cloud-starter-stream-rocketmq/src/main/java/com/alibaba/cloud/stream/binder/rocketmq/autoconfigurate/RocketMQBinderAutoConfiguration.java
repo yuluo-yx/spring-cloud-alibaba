@@ -37,7 +37,6 @@ import org.springframework.context.annotation.Configuration;
  * @author <a href="mailto:fangjian0423@gmail.com">Jim</a>
  * @author freeman
  */
-
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties({ RocketMQExtendedBindingProperties.class,
 		RocketMQBinderConfigurationProperties.class })
