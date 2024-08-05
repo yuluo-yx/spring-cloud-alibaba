@@ -21,6 +21,8 @@ import java.util.Map;
 
 import com.alibaba.cloud.examples.common.SimpleMsg;
 import org.apache.rocketmq.common.message.MessageConst;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
@@ -39,6 +41,9 @@ import org.springframework.messaging.support.GenericMessage;
  */
 @SpringBootApplication
 public class RocketMQPollableConsumeApplication {
+
+	private static final Logger log = LoggerFactory
+			.getLogger(RocketMQPollableConsumeApplication.class);
 
 	@Autowired
 	private StreamBridge streamBridge;

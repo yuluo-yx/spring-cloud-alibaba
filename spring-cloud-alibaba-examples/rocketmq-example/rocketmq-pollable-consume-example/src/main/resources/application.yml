@@ -8,7 +8,6 @@ spring:
     stream:
       pollable-source: pollable
       rocketmq:
-        enabled: false
         binder:
           name-server: localhost:9876
         bindings:
