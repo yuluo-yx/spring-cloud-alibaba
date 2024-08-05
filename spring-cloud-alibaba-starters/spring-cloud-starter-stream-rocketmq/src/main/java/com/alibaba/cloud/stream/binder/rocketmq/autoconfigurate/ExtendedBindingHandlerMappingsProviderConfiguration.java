@@ -35,7 +35,6 @@ public class ExtendedBindingHandlerMappingsProviderConfiguration {
 
 	@Bean
 	public MappingsProvider rocketExtendedPropertiesDefaultMappingsProvider() {
-
 		return () -> {
 			Map<ConfigurationPropertyName, ConfigurationPropertyName> mappings = new HashMap<>();
 			mappings.put(
@@ -45,14 +44,12 @@ public class ExtendedBindingHandlerMappingsProviderConfiguration {
 					ConfigurationPropertyName.of("spring.cloud.stream.rocketmq.streams"),
 					ConfigurationPropertyName
 							.of("spring.cloud.stream.rocketmq.streams.default"));
-
 			return mappings;
 		};
 	}
 
 	@Bean
 	public static RocketMQConfigBeanPostProcessor rocketMQConfigBeanPostProcessor() {
-
 		return new RocketMQConfigBeanPostProcessor();
 	}
 
@@ -63,7 +60,6 @@ public class ExtendedBindingHandlerMappingsProviderConfiguration {
 	@Bean(RocketMQMessageConverter.DEFAULT_NAME)
 	@ConditionalOnMissingBean(name = { RocketMQMessageConverter.DEFAULT_NAME })
 	public CompositeMessageConverter rocketMQMessageConverter() {
-
 		return new RocketMQMessageConverter().getMessageConverter();
 	}
 
@@ -74,7 +70,6 @@ public class ExtendedBindingHandlerMappingsProviderConfiguration {
 	 */
 	@Bean
 	public MessageConverter rocketMQCustomMessageConverter() {
-
 		return new RocketMQMessageConverter();
 	}
 

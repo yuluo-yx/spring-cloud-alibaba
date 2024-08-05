@@ -50,6 +50,11 @@ public class RocketMQBinderAutoConfiguration {
 	private RocketMQBinderConfigurationProperties rocketBinderConfigurationProperties;
 
 	@Bean
+	public RocketMQTopicProvisioner rocketMQTopicProvisioner() {
+		return new RocketMQTopicProvisioner();
+	}
+
+	@Bean
 	public RocketMQMessageChannelBinder rocketMQMessageChannelBinder(
 			RocketMQTopicProvisioner provisioningProvider) {
 		return new RocketMQMessageChannelBinder(rocketBinderConfigurationProperties,

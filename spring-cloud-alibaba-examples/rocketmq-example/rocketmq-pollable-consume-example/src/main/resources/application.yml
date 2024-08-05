@@ -1,6 +1,5 @@
 server:
   port: 28089
-
 spring:
   application:
     name: rocketmq-pollable-consume-example
