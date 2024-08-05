@@ -61,19 +61,6 @@ public class RocketMQBinderAutoConfiguration {
 				extendedBindingProperties, provisioningProvider);
 	}
 
-	@Bean
-	public RocketMQMessageChannelBinder rocketMQMessageChannelBinder(
-			RocketMQTopicProvisioner provisioningProvider,
-			RocketMQExtendedBindingProperties extendedBindingProperties,
-			RocketMQBinderConfigurationProperties rocketBinderConfigurationProperties
-	) {
-
-		return new RocketMQMessageChannelBinder(
-				rocketBinderConfigurationProperties,
-				extendedBindingProperties, provisioningProvider
-		);
-	}
-
 	@Configuration(proxyBeanMethods = false)
 	@ConditionalOnClass(HealthIndicator.class)
 	@ConditionalOnEnabledHealthIndicator("rocketmq")
@@ -81,7 +68,6 @@ public class RocketMQBinderAutoConfiguration {
 
 		@Bean
 		public RocketMQBinderHealthIndicator rocketMQBinderHealthIndicator() {
-
 			return new RocketMQBinderHealthIndicator();
 		}
 

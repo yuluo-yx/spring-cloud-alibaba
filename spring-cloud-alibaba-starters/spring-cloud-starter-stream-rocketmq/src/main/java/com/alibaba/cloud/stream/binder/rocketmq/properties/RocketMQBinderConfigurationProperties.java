@@ -16,7 +16,6 @@
 
 package com.alibaba.cloud.stream.binder.rocketmq.properties;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -25,13 +24,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @author <a href="mailto:fangjian0423@gmail.com">Jim</a>
  */
 
-@ConfigurationProperties(prefix = RocketMQBinderConfigurationProperties.PREFIX)
-@ConditionalOnProperty(
-		prefix = RocketMQBinderConfigurationProperties.PREFIX,
-		name = "enabled",
-		havingValue = "true",
-		matchIfMissing = true
-)
+@ConfigurationProperties(prefix = "spring.cloud.stream.rocketmq.binder")
 public class RocketMQBinderConfigurationProperties extends RocketMQCommonProperties {
 
 	public static final String PREFIX = "spring.cloud.stream.rocketmq.binder";
