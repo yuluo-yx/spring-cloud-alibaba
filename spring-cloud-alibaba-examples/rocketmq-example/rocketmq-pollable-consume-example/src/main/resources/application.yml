@@ -19,7 +19,6 @@ spring:
           destination: pollable
         pollable-in-0:
           destination: pollable
-
 logging:
   level:
     org.springframework.context.support: debug
